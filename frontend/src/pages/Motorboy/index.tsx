@@ -88,7 +88,9 @@ export function Motorboy() {
       return;
     }
 
-    openGoogleMapsDirections(selectedAddresses);
+    const startAddress = 'Assembleia de Deus - Do Ubatuba, São Francisco do Sul - SC, 89240-000';
+
+    openGoogleMapsDirections(selectedAddresses, startAddress);
   }
 
   function confirmDelivery(id: string) {

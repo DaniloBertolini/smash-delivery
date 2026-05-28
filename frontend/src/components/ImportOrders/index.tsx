@@ -11,6 +11,11 @@ import {
 } from '../../hooks/useOrders';
 
 export function ImportOrders() {
+  const visibilityImportCsv = false
+  if (!visibilityImportCsv) {
+    return null;
+  }
+
   const [fileName, setFileName] =
     useState<string>();
 

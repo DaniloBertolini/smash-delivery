@@ -11,7 +11,9 @@ import {
 
 import { FileInterceptor } from '@nestjs/platform-express';
 
+import { CreateOrderDto } from './create-order.dto';
 import { Order } from './order.entity';
+import { UpdateOrderDto } from './update-order.dto';
 import { OrdersService } from './orders.service';
 
 @Controller('orders')
@@ -50,5 +52,20 @@ export class OrdersController {
   @Patch(':id/paid')
   markAsPaid(@Param('id') id: string) {
     return this.service.markAsPaid(id);
+  }
+
+  @Post()
+  create(@Body() createOrderDto: CreateOrderDto) {
+    return this.service.create(createOrderDto);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id')
+    id: string,
+    @Body()
+    updateOrderDto: UpdateOrderDto,
+  ) {
+    return this.service.update(id, updateOrderDto);
   }
 }

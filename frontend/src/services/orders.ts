@@ -25,3 +25,31 @@ export async function markAsPaid(id: string): Promise<Order> {
   const response = await api.patch(`/orders/${id}/paid`);
   return response.data;
 }
+
+export async function createOrder(
+  data: CreateOrderDTO,
+): Promise<Order> {
+  const response = await api.post('/orders', data);
+  return response.data;
+}
+
+export async function updateOrderData(
+  id: string,
+  data: UpdateOrderDTO,
+): Promise<Order> {
+  const response = await api.patch(`/orders/${id}`, data);
+  return response.data;
+}
+
+interface CreateOrderDTO {
+  customerName: string;
+  seller: string;
+  paid: boolean;
+  contact?: string;
+  address?: string;
+  quantity: number;
+  notes?: string;
+  isPickup: boolean;
+}
+
+interface UpdateOrderDTO extends Partial<CreateOrderDTO> {}

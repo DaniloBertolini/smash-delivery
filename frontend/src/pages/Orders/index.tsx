@@ -25,11 +25,15 @@ import {
   ShoppingOutlined,
   CarOutlined,
   InboxOutlined,
+  PlusOutlined,
+  EditOutlined,
 } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 
 import { ImportOrders } from '../../components/ImportOrders';
 import { SellerRanking } from '../../components/SellerRanking';
+import { CreateOrderModal } from '../../components/CreateOrderModal';
+import { EditOrderModal } from '../../components/EditOrderModal';
 import { getOrders, updateOrder, markAsPaid } from '../../services/orders';
 import { openGoogleMaps } from '../../utils/mapHelper';
 import { useOrders } from '../../hooks/useOrders';
@@ -54,6 +58,9 @@ export function Orders() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
   const [showRanking, setShowRanking] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [searchText, setSearchText] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'delivery' | 'pickup'>('all');
   const [filterPaid, setFilterPaid] = useState<'all' | 'paid' | 'unpaid'>('all');
@@ -339,6 +346,16 @@ export function Orders() {
           </Col>
           <Col xs={12} sm={12} md={4} lg={2}>
             <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setShowCreateModal(true)}
+              style={{ width: '100%' }}
+            >
+              Novo
+            </Button>
+          </Col>
+          <Col xs={12} sm={12} md={4} lg={2}>
+            <Button
               icon={<ReloadOutlined />}
               onClick={loadOrders}
               loading={loading}
@@ -492,12 +509,26 @@ export function Orders() {
               },
               {
                 title: 'Ações',
-                width: 160,
+                width: 180,
                 fixed: 'right',
                 render: (_, row) => {
+                  const editButton = (
+                    <Button
+                      icon={<EditOutlined />}
+                      onClick={() => {
+                        setEditingOrder(row);
+                        setShowEditModal(true);
+                      }}
+                    >
+                      Editar
+                    </Button>
+                  );
+
+                  let actionButton = null;
+
                   if (row.isPickup) {
                     if (row.status === 'PENDING') {
-                      return (
+                      actionButton = (
                         <Button
                           type="primary"
                           loading={updating === row.id}
@@ -506,9 +537,8 @@ export function Orders() {
                           Pronto
                         </Button>
                       );
-                    }
-                    if (row.status === 'PENDING_PICKUP') {
-                      return (
+                    } else if (row.status === 'PENDING_PICKUP') {
+                      actionButton = (
                         <Button
                           type="primary"
                           loading={updating === row.id}
@@ -517,9 +547,8 @@ export function Orders() {
                           Retirado
                         </Button>
                       );
-                    }
-                    if (row.status === 'PICKED_UP') {
-                      return (
+                    } else if (row.status === 'PICKED_UP') {
+                      actionButton = (
                         <Button
                           danger
                           loading={updating === row.id}
@@ -531,7 +560,7 @@ export function Orders() {
                     }
                   } else {
                     if (row.status === 'PENDING') {
-                      return (
+                      actionButton = (
                         <Button
                           type="primary"
                           loading={updating === row.id}
@@ -540,9 +569,8 @@ export function Orders() {
                           Enviar
                         </Button>
                       );
-                    }
-                    if (row.status === 'OUT_FOR_DELIVERY') {
-                      return (
+                    } else if (row.status === 'OUT_FOR_DELIVERY') {
+                      actionButton = (
                         <Button
                           type="primary"
                           loading={updating === row.id}
@@ -551,9 +579,8 @@ export function Orders() {
                           Entregar
                         </Button>
                       );
-                    }
-                    if (row.status === 'DELIVERED') {
-                      return (
+                    } else if (row.status === 'DELIVERED') {
+                      actionButton = (
                         <Button
                           danger
                           loading={updating === row.id}
@@ -564,7 +591,13 @@ export function Orders() {
                       );
                     }
                   }
-                  return null;
+
+                  return (
+                    <Space size="small">
+                      {editButton}
+                      {actionButton}
+                    </Space>
+                  );
                 },
               },
             ]}
@@ -572,6 +605,18 @@ export function Orders() {
         </div>
       </Card>
       <SellerRanking open={showRanking} onClose={() => setShowRanking(false)} />
+      <CreateOrderModal
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+      />
+      <EditOrderModal
+        open={showEditModal}
+        order={editingOrder}
+        onClose={() => {
+          setShowEditModal(false);
+          setEditingOrder(null);
+        }}
+      />
     </div>
   );
 }

@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as XLSX from 'xlsx';
+import { CreateOrderDto } from './create-order.dto';
 import { Order } from './order.entity';
+import { UpdateOrderDto } from './update-order.dto';
 
 @Injectable()
 export class OrdersService {
@@ -143,6 +145,22 @@ export class OrdersService {
     }
 
     order.paid = true;
+    return this.orderRepository.save(order);
+  }
+
+  async create(createOrderDto: CreateOrderDto): Promise<Order> {
+    const order = this.orderRepository.create(createOrderDto);
+    return this.orderRepository.save(order);
+  }
+
+  async update(id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
+    const order = await this.orderRepository.findOne({ where: { id } });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    Object.assign(order, updateOrderDto);
     return this.orderRepository.save(order);
   }
 }
