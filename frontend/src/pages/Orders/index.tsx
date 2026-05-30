@@ -240,7 +240,7 @@ export function Orders() {
           >
             <Statistic
               title="Pendente"
-              value={pendingOrders.length}
+              value={`${pendingOrders.length} (${data.reduce((acc, curr) => acc + curr.quantity, 0)})`}
               prefix={<InboxOutlined style={{ color: '#FAAD14' }} />}
               valueStyle={{ color: '#FAAD14', fontWeight: 700 }}
             />
