@@ -28,6 +28,7 @@ export function CreateOrderModal({ open, onClose }: CreateOrderModalProps) {
         quantity: values.quantity,
         notes: values.notes || undefined,
         isPickup: values.isPickup || false,
+        price: values.price,
       });
 
       const orders = await getOrders();
@@ -102,6 +103,14 @@ export function CreateOrderModal({ open, onClose }: CreateOrderModalProps) {
           rules={[{ required: true, message: 'Quantidade é obrigatória' }]}
         >
           <InputNumber min={1} placeholder="Quantidade" style={{ width: '100%' }} />
+        </Form.Item>
+
+        <Form.Item
+          label="Preço unitário (R$)"
+          name="price"
+          initialValue={19.90}
+        >
+          <InputNumber min={0} step={0.01} placeholder="Preço unitário" style={{ width: '100%' }} />
         </Form.Item>
 
         <Form.Item label="Observações" name="notes">

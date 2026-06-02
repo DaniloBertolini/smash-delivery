@@ -1,4 +1,4 @@
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
 
 export class CreateOrderDto {
   @IsString()
@@ -30,4 +30,9 @@ export class CreateOrderDto {
 
   @IsBoolean()
   isPickup: boolean;
+
+  @IsNumber()
+  @IsOptional()
+  @IsPositive()
+  price?: number;
 }

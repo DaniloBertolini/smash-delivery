@@ -7,6 +7,7 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
+  Res,
 } from '@nestjs/common';
 
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -15,6 +16,7 @@ import { CreateOrderDto } from './create-order.dto';
 import { Order } from './order.entity';
 import { UpdateOrderDto } from './update-order.dto';
 import { OrdersService } from './orders.service';
+import type { Response } from 'express';
 
 @Controller('orders')
 export class OrdersController {
@@ -57,6 +59,19 @@ export class OrdersController {
   @Post()
   create(@Body() createOrderDto: CreateOrderDto) {
     return this.service.create(createOrderDto);
+  }
+
+  @Get('export')
+  async export(@Res() res: Response) {
+    const buffer = await this.service.exportOrders();
+
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader('Content-Disposition', 'attachment; filename=pedidos.xlsx');
+
+    res.send(buffer);
   }
 
   @Patch(':id')

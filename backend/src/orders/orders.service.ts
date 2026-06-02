@@ -77,6 +77,13 @@ export class OrdersService {
       const notesValue =
         typeof mappedRow.observação === 'string' ? mappedRow.observação : '';
 
+      const quantity =
+        typeof mappedRow.quantidade === 'number'
+          ? mappedRow.quantidade
+          : typeof mappedRow.quantidade === 'string'
+            ? parseInt(mappedRow.quantidade, 10)
+            : 1;
+
       const orderData = {
         customerName,
         paid:
@@ -86,16 +93,12 @@ export class OrdersService {
           typeof mappedRow.vendedor === 'string' ? mappedRow.vendedor : '',
         contact: contactValue || undefined,
         address: addressValue || undefined,
-        quantity:
-          typeof mappedRow.quantidade === 'number'
-            ? mappedRow.quantidade
-            : typeof mappedRow.quantidade === 'string'
-              ? parseInt(mappedRow.quantidade, 10)
-              : 1,
+        quantity,
         notes: notesValue || undefined,
         isPickup:
           typeof mappedRow.retirar === 'string' &&
           mappedRow.retirar.toUpperCase() === 'SIM',
+        price: quantity * 19.9,
         status: 'PENDING' as const,
       };
 
@@ -149,7 +152,11 @@ export class OrdersService {
   }
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
-    const order = this.orderRepository.create(createOrderDto);
+    const orderData = {
+      ...createOrderDto,
+      price: createOrderDto.price ?? createOrderDto.quantity * 19.9,
+    };
+    const order = this.orderRepository.create(orderData);
     return this.orderRepository.save(order);
   }
 
@@ -162,5 +169,39 @@ export class OrdersService {
 
     Object.assign(order, updateOrderDto);
     return this.orderRepository.save(order);
+  }
+
+  async exportOrders(): Promise<Buffer> {
+    const orders = await this.orderRepository.find();
+
+    const header = [
+      'Nome',
+      'Pago',
+      'Vendedor',
+      'Contato',
+      'Endereço',
+      'Quantidade',
+      'Observação',
+      'Retirar',
+    ];
+
+    const rows = orders.map((order) => [
+      order.customerName,
+      order.paid ? 'SIM' : 'NÃO',
+      order.seller,
+      order.contact || '',
+      order.address || '',
+      order.quantity,
+      order.notes || '',
+      order.isPickup ? 'SIM' : 'NÃO',
+    ]);
+
+    const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Pedidos');
+
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+
+    return excelBuffer as Buffer;
   }
 }

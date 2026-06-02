@@ -42,6 +42,9 @@ export class Order {
   @Column({ type: 'boolean' })
   isPickup: boolean;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 19.9 })
+  price: number;
+
   @Column({
     type: 'enum',
     enum: [

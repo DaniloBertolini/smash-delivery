@@ -27,6 +27,7 @@ export function EditOrderModal({ open, order, onClose }: EditOrderModalProps) {
         quantity: order.quantity,
         notes: order.notes || '',
         isPickup: order.isPickup,
+        price: order.price,
       });
     }
   }, [order, form]);
@@ -47,6 +48,7 @@ export function EditOrderModal({ open, order, onClose }: EditOrderModalProps) {
         quantity: values.quantity,
         notes: values.notes || undefined,
         isPickup: values.isPickup || false,
+        price: values.price,
       });
 
       const orders = await getOrders();
@@ -115,6 +117,14 @@ export function EditOrderModal({ open, order, onClose }: EditOrderModalProps) {
           rules={[{ required: true, message: 'Quantidade é obrigatória' }]}
         >
           <InputNumber min={1} placeholder="Quantidade" style={{ width: '100%' }} />
+        </Form.Item>
+
+        <Form.Item
+          label="Preço unitário (R$)"
+          name="price"
+          rules={[{ required: true, message: 'Preço é obrigatório' }]}
+        >
+          <InputNumber min={0} step={0.01} placeholder="Preço unitário" style={{ width: '100%' }} />
         </Form.Item>
 
         <Form.Item label="Observações" name="notes">

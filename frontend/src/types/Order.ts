@@ -16,4 +16,5 @@ export interface Order {
   notes: string;
   isPickup: boolean;
   status: OrderStatus;
+  price: number;
 }

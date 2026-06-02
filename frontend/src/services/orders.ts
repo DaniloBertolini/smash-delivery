@@ -50,6 +50,7 @@ interface CreateOrderDTO {
   quantity: number;
   notes?: string;
   isPickup: boolean;
+  price?: number;
 }
 
 interface UpdateOrderDTO extends Partial<CreateOrderDTO> {}

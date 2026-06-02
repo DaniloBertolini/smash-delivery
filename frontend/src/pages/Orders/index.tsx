@@ -31,6 +31,7 @@ import {
 import { useEffect, useState } from 'react';
 
 import { ImportOrders } from '../../components/ImportOrders';
+import { ExportOrders } from '../../components/ExportOrders';
 import { SellerRanking } from '../../components/SellerRanking';
 import { CreateOrderModal } from '../../components/CreateOrderModal';
 import { EditOrderModal } from '../../components/EditOrderModal';
@@ -227,6 +228,7 @@ export function Orders() {
     <div style={{ width: '100%', position: 'relative' }}>
       <div style={{ position: 'absolute', top: -8, right: 0, zIndex: 10 }}>
         <ImportOrders />
+        <ExportOrders />
       </div>
 
       {/* Stats Cards */}
@@ -390,7 +392,7 @@ export function Orders() {
                 pageSize: newPagination.pageSize ?? 10,
               })
             }
-            scroll={{ x: 1200 }}
+            scroll={{ x: 1300 }}
             columns={[
               {
                 title: 'Pago',
@@ -482,6 +484,17 @@ export function Orders() {
                 width: 70,
                 dataIndex: 'quantity',
                 align: 'center',
+              },
+              {
+                title: 'Preço (R$)',
+                width: 90,
+                dataIndex: 'price',
+                align: 'center',
+                render: (value, row) => (
+                  <div style={{ fontWeight: 600 }}>
+                    {(value * row.quantity).toFixed(2)}
+                  </div>
+                ),
               },
               {
                 title: 'Tipo',
