@@ -25,6 +25,7 @@ export function CreateOrderModal({ open, onClose }: CreateOrderModalProps) {
         paid: values.paid || false,
         contact: values.contact || undefined,
         address: values.address || undefined,
+        bairro: values.bairro || undefined,
         quantity: values.quantity,
         notes: values.notes || undefined,
         isPickup: values.isPickup || false,
@@ -95,6 +96,10 @@ export function CreateOrderModal({ open, onClose }: CreateOrderModalProps) {
 
         <Form.Item label="Endereço" name="address">
           <Input.TextArea placeholder="Endereço de entrega" rows={2} />
+        </Form.Item>
+
+        <Form.Item label="Bairro" name="bairro">
+          <Input placeholder="Bairro" />
         </Form.Item>
 
         <Form.Item

@@ -64,6 +64,7 @@ export function Orders() {
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [searchText, setSearchText] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'delivery' | 'pickup'>('all');
+  const [filterBairro, setFilterBairro] = useState<string>('all');
   const [filterPaid, setFilterPaid] = useState<'all' | 'paid' | 'unpaid'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | Order['status']>('all');
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
@@ -84,7 +85,7 @@ export function Orders() {
 
   useEffect(() => {
     setPagination(prev => ({ ...prev, current: 1 }));
-  }, [searchText, filterType, filterPaid, filterStatus]);
+  }, [searchText, filterType, filterPaid, filterStatus, filterBairro]);
 
   async function changeStatus(id: string, reverse = false): Promise<void> {
     const targetOrder = data.find(o => o.id === id);
@@ -211,6 +212,10 @@ export function Orders() {
         return false;
       }
 
+      if (filterBairro !== 'all' && order.bairro !== filterBairro) {
+        return false;
+      }
+
       return true;
     });
 
@@ -223,6 +228,11 @@ export function Orders() {
   const completedOrders = data.filter(
     order => order.status === 'DELIVERED' || order.status === 'PICKED_UP',
   );
+
+  // Get unique bairros from orders
+  const uniqueBairros = Array.from(
+    new Set(data.map(order => order.bairro).filter(Boolean)),
+  ).sort();
 
   return (
     <div style={{ width: '100%', position: 'relative' }}>
@@ -337,6 +347,20 @@ export function Orders() {
               ]}
             />
           </Col>
+          <Col xs={12} sm={8} md={4} lg={4}>
+            <Select
+              style={{ width: '100%' }}
+              size="large"
+              value={filterBairro}
+              onChange={setFilterBairro}
+              placeholder="Filtrar por bairro"
+              allowClear
+              options={[
+                { label: 'Todos os bairros', value: 'all' },
+                ...uniqueBairros.map(bairro => ({ label: bairro, value: bairro })),
+              ]}
+            />
+          </Col>
           <Col xs={24} sm={24} md={4} lg={2}>
             <Button
               icon={<TrophyOutlined />}
@@ -392,7 +416,7 @@ export function Orders() {
                 pageSize: newPagination.pageSize ?? 10,
               })
             }
-            scroll={{ x: 1300 }}
+            scroll={{ x: 1450 }}
             columns={[
               {
                 title: 'Pago',
@@ -478,6 +502,12 @@ export function Orders() {
                     )}
                   </Space>
                 ),
+              },
+              {
+                title: 'Bairro',
+                width: 150,
+                dataIndex: 'bairro',
+                render: value => value || '-',
               },
               {
                 title: 'Qtd',

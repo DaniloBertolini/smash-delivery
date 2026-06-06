@@ -47,6 +47,7 @@ interface CreateOrderDTO {
   paid: boolean;
   contact?: string;
   address?: string;
+  bairro?: string;
   quantity: number;
   notes?: string;
   isPickup: boolean;

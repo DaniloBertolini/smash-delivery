@@ -20,6 +20,10 @@ export class CreateOrderDto {
   @IsOptional()
   address?: string;
 
+  @IsString()
+  @IsOptional()
+  bairro?: string;
+
   @IsInt()
   @IsPositive()
   quantity: number;
