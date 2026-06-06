@@ -34,7 +34,7 @@ export class Order {
   address: string;
 
   @Column({ nullable: true })
-  bairro: string;
+  neighborhood: string;
 
   @Column({ type: 'int' })
   quantity: number;

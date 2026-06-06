@@ -24,7 +24,7 @@ export function EditOrderModal({ open, order, onClose }: EditOrderModalProps) {
         paid: order.paid,
         contact: order.contact || '',
         address: order.address || '',
-        bairro: order.bairro || '',
+        neighborhood: order.neighborhood || '',
         quantity: order.quantity,
         notes: order.notes || '',
         isPickup: order.isPickup,
@@ -46,7 +46,7 @@ export function EditOrderModal({ open, order, onClose }: EditOrderModalProps) {
         paid: values.paid || false,
         contact: values.contact || undefined,
         address: values.address || undefined,
-        bairro: values.bairro || undefined,
+        neighborhood: values.neighborhood || undefined,
         quantity: values.quantity,
         notes: values.notes || undefined,
         isPickup: values.isPickup || false,
@@ -113,7 +113,7 @@ export function EditOrderModal({ open, order, onClose }: EditOrderModalProps) {
           <Input.TextArea placeholder="Endereço de entrega" rows={2} />
         </Form.Item>
 
-        <Form.Item label="Bairro" name="bairro">
+        <Form.Item label="Bairro" name="neighborhood">
           <Input placeholder="Bairro" />
         </Form.Item>
 

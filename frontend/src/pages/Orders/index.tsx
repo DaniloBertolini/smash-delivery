@@ -64,7 +64,7 @@ export function Orders() {
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [searchText, setSearchText] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'delivery' | 'pickup'>('all');
-  const [filterBairro, setFilterBairro] = useState<string>('all');
+  const [filterNeighborhood, setFilterNeighborhood] = useState<string>('all');
   const [filterPaid, setFilterPaid] = useState<'all' | 'paid' | 'unpaid'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | Order['status']>('all');
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
@@ -85,7 +85,7 @@ export function Orders() {
 
   useEffect(() => {
     setPagination(prev => ({ ...prev, current: 1 }));
-  }, [searchText, filterType, filterPaid, filterStatus, filterBairro]);
+  }, [searchText, filterType, filterPaid, filterStatus, filterNeighborhood]);
 
   async function changeStatus(id: string, reverse = false): Promise<void> {
     const targetOrder = data.find(o => o.id === id);
@@ -212,7 +212,7 @@ export function Orders() {
         return false;
       }
 
-      if (filterBairro !== 'all' && order.bairro !== filterBairro) {
+      if (filterNeighborhood !== 'all' && order.neighborhood !== filterNeighborhood) {
         return false;
       }
 
@@ -229,9 +229,9 @@ export function Orders() {
     order => order.status === 'DELIVERED' || order.status === 'PICKED_UP',
   );
 
-  // Get unique bairros from orders
-  const uniqueBairros = Array.from(
-    new Set(data.map(order => order.bairro).filter(Boolean)),
+  // Get unique neighborhoods from orders
+  const uniqueNeighborhoods = Array.from(
+    new Set(data.map(order => order.neighborhood).filter(Boolean)),
   ).sort();
 
   return (
@@ -351,13 +351,13 @@ export function Orders() {
             <Select
               style={{ width: '100%' }}
               size="large"
-              value={filterBairro}
-              onChange={setFilterBairro}
+              value={filterNeighborhood}
+              onChange={setFilterNeighborhood}
               placeholder="Filtrar por bairro"
               allowClear
               options={[
                 { label: 'Todos os bairros', value: 'all' },
-                ...uniqueBairros.map(bairro => ({ label: bairro, value: bairro })),
+                ...uniqueNeighborhoods.map(neighborhood => ({ label: neighborhood, value: neighborhood })),
               ]}
             />
           </Col>
@@ -506,7 +506,7 @@ export function Orders() {
               {
                 title: 'Bairro',
                 width: 150,
-                dataIndex: 'bairro',
+                dataIndex: 'neighborhood',
                 render: value => value || '-',
               },
               {

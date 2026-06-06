@@ -192,7 +192,7 @@ export class OrdersService {
       order.seller,
       order.contact || '',
       order.address || '',
-      order.bairro || '',
+      order.neighborhood || '',
       order.quantity,
       order.notes || '',
       order.isPickup ? 'SIM' : 'NÃO',

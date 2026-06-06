@@ -22,7 +22,7 @@ export class CreateOrderDto {
 
   @IsString()
   @IsOptional()
-  bairro?: string;
+  neighborhood?: string;
 
   @IsInt()
   @IsPositive()

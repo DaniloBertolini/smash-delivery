@@ -12,7 +12,7 @@ export interface Order {
   paid: boolean;
   contact: string;
   address: string;
-  bairro: string;
+  neighborhood: string;
   quantity: number;
   notes: string;
   isPickup: boolean;
